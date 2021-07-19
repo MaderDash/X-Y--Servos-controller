@@ -1,0 +1,61 @@
+// This sets up the varbles we need for the pins on the arduino.
+
+#include <Servo.h>
+Servo servo;
+Servo servo2;
+// THis is what pin the servo for the Y axis is connected to
+#define servoControlPin2 7
+// this is what pin the servo is conected to servo x.
+#define servoControlPin 6
+//This is for the Y axis on the Joystick
+#define PIN_ANALOG_Y A1
+//This is the pin that the analog X joystick is conected to.
+#define PIN_ANALOG_X A0
+// Tis is the delay to move the servo, lowe is faster but more jurky X.
+uint8_t servoDelay = 100;
+//This is the starting posision of the servo.
+int pos = 90;
+int pos2 = 90;
+
+//This sets up the code so that you can use the pins, ect it is only ran one time.
+void setup() {
+  Serial.begin(9600);
+  pinMode(PIN_ANALOG_X, INPUT);
+  pinMode(PIN_ANALOG_Y, INPUT);
+}
+//Tis is the part of the code that runs over and over again.
+void loop() {
+  delay(100);
+  servoMoveX();
+  servoMoveY();
+}
+//This is what controlls servo X.
+void servoMoveX() {
+  int JoyX = analogRead(PIN_ANALOG_X);
+  int JoyXmap = map(JoyX, 0, 1023, -30, 32);
+  JoyXmap = JoyXmap + 90;
+  servo.attach(servoControlPin);
+  servo.write(JoyXmap);
+  delay(servoDelay);
+  servo.detach();
+  Serial.print("joy: ");
+  Serial.println(JoyX);
+  Serial.print("map: ");
+  Serial.println(JoyXmap);
+  Serial.println("Moving Servo");
+}
+
+void servoMoveY() {
+  int JoyY = analogRead(PIN_ANALOG_Y);
+  int JoyYmap = map(JoyY, 0, 1023, -30, 32);
+  JoyYmap = JoyYmap + 90;
+  servo.attach(servoControlPin2);
+  servo.write(JoyYmap);
+  delay(servoDelay);
+  servo.detach();
+  Serial.print("joy 2: ");
+  Serial.println(JoyY);
+  Serial.print("map 2:  ");
+  Serial.println(JoyYmap);
+  Serial.println("Moving Servo 2");
+}
